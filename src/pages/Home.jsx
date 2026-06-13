@@ -1,14 +1,20 @@
 import PageLayout from "../components/layout/PageLayout.jsx";
+import HeroSection from "../components/home/HeroSection.jsx";
+import AboutSection from "../components/home/AboutSection.jsx";
+import WorkshopSection from "../components/home/WorkshopSection.jsx";
+import ProductsSection from "../components/home/ProductsSection.jsx";
+import WhyChooseUsSection from "../components/home/WhyChooseUsSection.jsx";
+import ContactCTA from "../components/home/ContactCTA.jsx";
 
 function Home() {
   return (
     <PageLayout>
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <h1 className="text-3xl font-bold text-clay-900">Inicio</h1>
-        <p className="mt-2 text-clay-700">
-          Aquí irá la Home con todas sus secciones (Bloque 3).
-        </p>
-      </section>
+      <HeroSection />
+      <AboutSection />
+      <WorkshopSection />
+      <ProductsSection />
+      <WhyChooseUsSection />
+      <ContactCTA />
     </PageLayout>
   );
 }

@@ -1,8 +1,10 @@
 function SectionTitle({ title, subtitle, centered = false }) {
   return (
     <div className={centered ? "text-center" : ""}>
-      <h2 className="text-2xl md:text-3xl font-bold text-clay-900">{title}</h2>
-      {subtitle && <p className="mt-2 text-clay-600">{subtitle}</p>}
+      <h2 className="text-3xl md:text-4xl font-medium text-ink">{title}</h2>
+      {subtitle && (
+        <p className="mt-3 text-lg text-stone max-w-2xl mx-auto">{subtitle}</p>
+      )}
     </div>
   );
 }

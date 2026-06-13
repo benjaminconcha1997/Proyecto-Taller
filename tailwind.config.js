@@ -4,28 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta cálida provisional (tonos cerámica/arcilla).
-        // La ajustaremos con los valores reales del Figma en el Bloque 3.
+        // Paleta real extraída del diseño en Figma.
+        cream: "#faf7f4", // fondo principal
+        ink: "#3d3230", // texto oscuro / títulos / footer
+        stone: "#756960", // texto secundario
+        terracotta: {
+          DEFAULT: "#c6775e", // acento principal (botones, badges)
+          dark: "#b3674f", // hover
+        },
         clay: {
-          50: "#faf6f2",
-          100: "#f2e8df",
-          200: "#e4d0bf",
-          300: "#d3b29a",
-          400: "#bd8e6e",
-          500: "#a9714f",
-          600: "#8f5a3d",
-          700: "#734733",
-          800: "#5c3a2c",
-          900: "#4a3024",
+          DEFAULT: "#8b6f5c", // botón secundario / marrón
+          dark: "#7a6051",
         },
-        brick: {
-          // Acento "puerta roja"
-          500: "#b8412e",
-          600: "#9d3526",
-        },
+        border: "#8d6f5c", // borde header
       },
       fontFamily: {
-        sans: ["system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
     },
   },

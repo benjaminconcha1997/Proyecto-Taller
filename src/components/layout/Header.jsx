@@ -13,17 +13,16 @@ function Header() {
 
   const linkClass = ({ isActive }) =>
     isActive
-      ? "text-brick-500 font-semibold"
-      : "text-clay-700 hover:text-brick-500 transition-colors";
+      ? "text-terracotta font-medium"
+      : "text-ink hover:text-terracotta transition-colors";
 
   return (
-    <header className="bg-clay-50 border-b border-clay-200">
+    <header className="bg-white border-b border-border/40 sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-clay-900">
+        <Link to="/" className="text-xl font-semibold text-ink">
           Taller de la Puerta Roja
         </Link>
 
-        {/* Navegación desktop */}
         <nav className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <NavLink key={link.to} to={link.to} className={linkClass}>
@@ -32,17 +31,16 @@ function Header() {
           ))}
           <Link
             to="/admin"
-            className="px-4 py-2 rounded-lg bg-brick-500 text-white hover:bg-brick-600 transition-colors"
+            className="px-4 py-2 rounded-xl bg-terracotta text-white hover:bg-terracotta-dark transition-colors"
           >
             Admin
           </Link>
         </nav>
 
-        {/* Botón menú mobile */}
         <button
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
-          className="md:hidden text-clay-700"
+          className="md:hidden text-ink"
           aria-label="Abrir menú"
           aria-expanded={menuOpen}
         >
@@ -50,9 +48,8 @@ function Header() {
         </button>
       </div>
 
-      {/* Menú mobile desplegable */}
       {menuOpen && (
-        <nav className="md:hidden border-t border-clay-200 px-4 py-3 flex flex-col gap-3">
+        <nav className="md:hidden border-t border-border/40 px-4 py-3 flex flex-col gap-3">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -66,7 +63,7 @@ function Header() {
           <Link
             to="/admin"
             onClick={() => setMenuOpen(false)}
-            className="px-4 py-2 rounded-lg bg-brick-500 text-white text-center hover:bg-brick-600 transition-colors"
+            className="px-4 py-2 rounded-xl bg-terracotta text-white text-center hover:bg-terracotta-dark transition-colors"
           >
             Admin
           </Link>
