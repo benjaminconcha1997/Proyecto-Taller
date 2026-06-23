@@ -1,11 +1,18 @@
+import { useState } from "react";
+import AdminLayout from "../components/admin/AdminLayout.jsx";
+import InventoryPanel from "../components/admin/InventoryPanel.jsx";
+import InvoicesPanel from "../components/admin/InvoicesPanel.jsx";
+import ExpensesPanel from "../components/admin/ExpensesPanel.jsx";
+
 function AdminPage() {
+  const [activeTab, setActiveTab] = useState("inventory");
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold text-clay-900">Administración</h1>
-      <p className="mt-2 text-clay-700">
-        Panel con tabs internos: Inventario, Facturas, Gastos (Bloque 5).
-      </p>
-    </div>
+    <AdminLayout activeTab={activeTab} onChangeTab={setActiveTab}>
+      {activeTab === "inventory" && <InventoryPanel />}
+      {activeTab === "invoices" && <InvoicesPanel />}
+      {activeTab === "expenses" && <ExpensesPanel />}
+    </AdminLayout>
   );
 }
 
