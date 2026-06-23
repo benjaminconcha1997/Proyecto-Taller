@@ -61,49 +61,49 @@ function InventoryPanel() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item, index) => {
-              const status = getStockStatus(item);
-              const isLow = status === "Bajo";
-              return (
-                <tr
-                  key={item.id}
-                  className={`border-t border-border/15 ${index % 2 === 1 ? "bg-cream/50" : "bg-white"}`}
-                >
-                  <td className="px-6 py-4 text-ink">{item.name}</td>
-                  <td className="px-6 py-4 text-stone">{item.category}</td>
-                  <td className="px-6 py-4 text-ink">{item.quantity} {item.unit}</td>
-                  <td className="px-6 py-4 text-stone">{item.minStock} {item.unit}</td>
-                  <td className="px-6 py-4 text-ink">{formatPrice(item.unitPrice)}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                        isLow ? "bg-red-100 text-red-700" : "bg-terracotta/10 text-terracotta"
-                      }`}
-                    >
-                      {status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => handleEdit(item.id)}
-                        className="text-clay hover:underline"
+            {items.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-6 py-10 text-center text-stone">
+                  No hay items en el inventario.
+                </td>
+              </tr>
+            ) : (
+              items.map((item, index) => {
+                const status = getStockStatus(item);
+                const isLow = status === "Bajo";
+                return (
+                  <tr
+                    key={item.id}
+                    className={`border-t border-border/15 ${index % 2 === 1 ? "bg-cream/50" : "bg-white"}`}
+                  >
+                    <td className="px-6 py-4 text-ink">{item.name}</td>
+                    <td className="px-6 py-4 text-stone">{item.category}</td>
+                    <td className="px-6 py-4 text-ink">{item.quantity} {item.unit}</td>
+                    <td className="px-6 py-4 text-stone">{item.minStock} {item.unit}</td>
+                    <td className="px-6 py-4 text-ink">{formatPrice(item.unitPrice)}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                          isLow ? "bg-red-100 text-red-700" : "bg-terracotta/10 text-terracotta"
+                        }`}
                       >
-                        Editar
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(item.id)}
-                        className="text-stone hover:text-red-700 hover:underline"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+                        {status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-3">
+                        <button type="button" onClick={() => handleEdit(item.id)} className="text-clay hover:underline">
+                          Editar
+                        </button>
+                        <button type="button" onClick={() => handleDelete(item.id)} className="text-stone hover:text-red-700 hover:underline">
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>

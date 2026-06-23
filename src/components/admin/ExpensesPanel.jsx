@@ -44,22 +44,30 @@ function ExpensesPanel() {
             </tr>
           </thead>
           <tbody>
-            {expenses.map((expense, index) => (
-              <tr
-                key={expense.id}
-                className={`border-t border-border/15 ${index % 2 === 1 ? "bg-cream/50" : "bg-white"}`}
-              >
-                <td className="px-6 py-4 text-ink">{expense.concept}</td>
-                <td className="px-6 py-4 text-stone">{expense.category}</td>
-                <td className="px-6 py-4 text-stone">{expense.date}</td>
-                <td className="px-6 py-4 text-ink">{formatPrice(expense.amount)}</td>
-                <td className="px-6 py-4">
-                  <button type="button" onClick={() => handleDelete(expense.id)} className="text-stone hover:text-red-700 hover:underline">
-                    Eliminar
-                  </button>
+            {expenses.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-10 text-center text-stone">
+                  No hay gastos registrados.
                 </td>
               </tr>
-            ))}
+            ) : (
+              expenses.map((expense, index) => (
+                <tr
+                  key={expense.id}
+                  className={`border-t border-border/15 ${index % 2 === 1 ? "bg-cream/50" : "bg-white"}`}
+                >
+                  <td className="px-6 py-4 text-ink">{expense.concept}</td>
+                  <td className="px-6 py-4 text-stone">{expense.category}</td>
+                  <td className="px-6 py-4 text-stone">{expense.date}</td>
+                  <td className="px-6 py-4 text-ink">{formatPrice(expense.amount)}</td>
+                  <td className="px-6 py-4">
+                    <button type="button" onClick={() => handleDelete(expense.id)} className="text-stone hover:text-red-700 hover:underline">
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
           <tfoot>
             <tr className="border-t border-border/15 bg-cream/50 font-medium text-ink">

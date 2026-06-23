@@ -7,3 +7,9 @@
 body {
   @apply bg-cream text-ink font-sans;
 }
+
+/* Foco visible para navegación con teclado (accesibilidad). */
+:focus-visible {
+  outline: 2px solid theme("colors.terracotta.DEFAULT");
+  outline-offset: 2px;
+}

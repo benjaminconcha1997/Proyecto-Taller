@@ -52,32 +52,40 @@ function InvoicesPanel() {
             </tr>
           </thead>
           <tbody>
-            {invoices.map((invoice, index) => (
-              <tr
-                key={invoice.id}
-                className={`border-t border-border/15 ${index % 2 === 1 ? "bg-cream/50" : "bg-white"}`}
-              >
-                <td className="px-6 py-4 text-ink">{invoice.number}</td>
-                <td className="px-6 py-4 text-stone">{invoice.client}</td>
-                <td className="px-6 py-4 text-stone">{invoice.date}</td>
-                <td className="px-6 py-4 text-ink">{formatPrice(invoice.amount)}</td>
-                <td className="px-6 py-4">
-                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${statusStyles[invoice.status]}`}>
-                    {statusLabels[invoice.status]}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex gap-3">
-                    <button type="button" onClick={() => console.log("Ver factura", invoice.id)} className="text-clay hover:underline">
-                      Ver
-                    </button>
-                    <button type="button" onClick={() => handleDelete(invoice.id)} className="text-stone hover:text-red-700 hover:underline">
-                      Eliminar
-                    </button>
-                  </div>
+            {invoices.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-10 text-center text-stone">
+                  No hay facturas registradas.
                 </td>
               </tr>
-            ))}
+            ) : (
+              invoices.map((invoice, index) => (
+                <tr
+                  key={invoice.id}
+                  className={`border-t border-border/15 ${index % 2 === 1 ? "bg-cream/50" : "bg-white"}`}
+                >
+                  <td className="px-6 py-4 text-ink">{invoice.number}</td>
+                  <td className="px-6 py-4 text-stone">{invoice.client}</td>
+                  <td className="px-6 py-4 text-stone">{invoice.date}</td>
+                  <td className="px-6 py-4 text-ink">{formatPrice(invoice.amount)}</td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${statusStyles[invoice.status]}`}>
+                      {statusLabels[invoice.status]}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex gap-3">
+                      <button type="button" onClick={() => console.log("Ver factura", invoice.id)} className="text-clay hover:underline">
+                        Ver
+                      </button>
+                      <button type="button" onClick={() => handleDelete(invoice.id)} className="text-stone hover:text-red-700 hover:underline">
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
