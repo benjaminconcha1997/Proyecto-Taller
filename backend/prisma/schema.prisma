@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workshop {
+  id             Int     @id @default(autoincrement())
+  title          String
+  description    String
+  teacher        String
+  day            String
+  schedule       String
+  availableSlots Int
+  price          Int
+  image          String
+  status         String  // disponible | agotado | proximamente
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  price       Int
+  stock       Int
+  category    String
+  image       String
+  featured    Boolean @default(false)
+  status      String  // disponible | agotado
+}
+
+model InventoryItem {
+  id        Int    @id @default(autoincrement())
+  name      String
+  category  String
+  quantity  Int
+  unit      String
+  minStock  Int
+  unitPrice Int
+}
+
+model Invoice {
+  id     Int    @id @default(autoincrement())
+  number String
+  client String
+  date   String
+  amount Int
+  status String // pagada | pendiente
+}
+
+model Expense {
+  id       Int    @id @default(autoincrement())
+  concept  String
+  category String
+  date     String
+  amount   Int
+}
