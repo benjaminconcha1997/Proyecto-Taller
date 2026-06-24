@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
-import { getInventory } from "../../services/adminService.js";
+import {
+  getInventory,
+  createInventoryItem,
+  updateInventoryItem,
+  deleteInventoryItem,
+} from "../../services/adminService.js";
 import Loader from "../ui/Loader.jsx";
 import ErrorMessage from "../ui/ErrorMessage.jsx";
+import InventoryForm from "./InventoryForm.jsx";
 
 function formatPrice(value) {
   return value.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
@@ -16,23 +22,54 @@ function InventoryPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  // Control del formulario: showForm abre el modal,
+  // editingItem = null -> crear, editingItem = objeto -> editar.
+  const [showForm, setShowForm] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+
+  // Carga (o recarga) la lista desde la API.
+  function loadItems() {
+    setLoading(true);
     getInventory()
       .then(setItems)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    loadItems();
   }, []);
 
-  function handleDelete(id) {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  }
-
-  function handleEdit(id) {
-    console.log("Editar item", id);
-  }
-
   function handleAdd() {
-    console.log("Agregar nuevo item");
+    setEditingItem(null);
+    setShowForm(true);
+  }
+
+  function handleEdit(item) {
+    setEditingItem(item);
+    setShowForm(true);
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm("¿Eliminar este item? Esta acción no se puede deshacer.")) return;
+    try {
+      await deleteInventoryItem(id);
+      loadItems(); // refetch para reflejar la base real
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  // Llamada desde el formulario al guardar (crea o edita según editingItem).
+  async function handleSave(formData) {
+    if (editingItem) {
+      await updateInventoryItem(editingItem.id, formData);
+    } else {
+      await createInventoryItem(formData);
+    }
+    setShowForm(false);
+    setEditingItem(null);
+    loadItems();
   }
 
   if (loading) return <Loader message="Cargando inventario..." />;
@@ -98,7 +135,7 @@ function InventoryPanel() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-3">
-                        <button type="button" onClick={() => handleEdit(item.id)} className="text-clay hover:underline">
+                        <button type="button" onClick={() => handleEdit(item)} className="text-clay hover:underline">
                           Editar
                         </button>
                         <button type="button" onClick={() => handleDelete(item.id)} className="text-stone hover:text-red-700 hover:underline">
@@ -113,6 +150,17 @@ function InventoryPanel() {
           </tbody>
         </table>
       </div>
+
+      {showForm && (
+        <InventoryForm
+          item={editingItem}
+          onSave={handleSave}
+          onCancel={() => {
+            setShowForm(false);
+            setEditingItem(null);
+          }}
+        />
+      )}
     </section>
   );
 }
