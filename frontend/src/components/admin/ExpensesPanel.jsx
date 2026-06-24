@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getExpenses } from "../../services/adminService.js";
+import Loader from "../ui/Loader.jsx";
+import ErrorMessage from "../ui/ErrorMessage.jsx";
 
 function formatPrice(value) {
   return value.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
@@ -7,9 +9,14 @@ function formatPrice(value) {
 
 function ExpensesPanel() {
   const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    getExpenses().then(setExpenses);
+    getExpenses()
+      .then(setExpenses)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
 
   function handleDelete(id) {
@@ -18,6 +25,9 @@ function ExpensesPanel() {
 
   // Total calculado a partir de los gastos visibles.
   const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+  if (loading) return <Loader message="Cargando gastos..." />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <section className="flex flex-col gap-6">

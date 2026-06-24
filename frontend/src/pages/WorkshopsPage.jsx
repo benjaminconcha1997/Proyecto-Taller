@@ -1,39 +1,21 @@
-import { useEffect, useState } from "react";
 import { Users, Package, Award } from "lucide-react";
 import PageLayout from "../components/layout/PageLayout.jsx";
 import PageHero from "../components/ui/PageHero.jsx";
 import WorkshopCard from "../components/home/WorkshopCard.jsx";
+import Loader from "../components/ui/Loader.jsx";
+import ErrorMessage from "../components/ui/ErrorMessage.jsx";
 import { getWorkshops } from "../services/workshopService.js";
+import { useFetch } from "../hooks/useFetch.js";
 import heroImage from "../assets/images/hero.jpg";
 
-// Beneficios fijos extraídos del diseño de Figma.
 const benefits = [
-  {
-    icon: Users,
-    title: "Grupos Pequeños",
-    description:
-      "Máximo 8 personas por taller para garantizar atención personalizada.",
-  },
-  {
-    icon: Package,
-    title: "Materiales Incluidos",
-    description:
-      "Todos los materiales y herramientas necesarias están incluidos.",
-  },
-  {
-    icon: Award,
-    title: "Profesoras con Experiencia",
-    description:
-      "Aprende de ceramistas profesionales con años de experiencia.",
-  },
+  { icon: Users, title: "Grupos Pequeños", description: "Máximo 8 personas por taller para garantizar atención personalizada." },
+  { icon: Package, title: "Materiales Incluidos", description: "Todos los materiales y herramientas necesarias están incluidos." },
+  { icon: Award, title: "Profesoras con Experiencia", description: "Aprende de ceramistas profesionales con años de experiencia." },
 ];
 
 function WorkshopsPage() {
-  const [workshops, setWorkshops] = useState([]);
-
-  useEffect(() => {
-    getWorkshops().then(setWorkshops);
-  }, []);
+  const { data: workshops, loading, error } = useFetch(getWorkshops);
 
   return (
     <PageLayout>
@@ -45,11 +27,15 @@ function WorkshopsPage() {
 
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {workshops.map((workshop) => (
-              <WorkshopCard key={workshop.id} workshop={workshop} />
-            ))}
-          </div>
+          {loading && <Loader message="Cargando talleres..." />}
+          {error && <ErrorMessage message={error} />}
+          {!loading && !error && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {workshops.map((workshop) => (
+                <WorkshopCard key={workshop.id} workshop={workshop} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

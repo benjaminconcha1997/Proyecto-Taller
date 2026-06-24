@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getInvoices } from "../../services/adminService.js";
+import Loader from "../ui/Loader.jsx";
+import ErrorMessage from "../ui/ErrorMessage.jsx";
 
 function formatPrice(value) {
   return value.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
@@ -17,14 +19,22 @@ const statusLabels = {
 
 function InvoicesPanel() {
   const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    getInvoices().then(setInvoices);
+    getInvoices()
+      .then(setInvoices)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
 
   function handleDelete(id) {
     setInvoices((prev) => prev.filter((invoice) => invoice.id !== id));
   }
+
+  if (loading) return <Loader message="Cargando facturas..." />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <section className="flex flex-col gap-6">

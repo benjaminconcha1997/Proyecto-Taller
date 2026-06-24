@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
 import { getProducts } from "../../services/productService.js";
+import { useFetch } from "../../hooks/useFetch.js";
 import SectionTitle from "../ui/SectionTitle.jsx";
 import Button from "../ui/Button.jsx";
+import Loader from "../ui/Loader.jsx";
+import ErrorMessage from "../ui/ErrorMessage.jsx";
 import ProductCard from "./ProductCard.jsx";
 
 function ProductsSection() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    getProducts().then(setProducts);
-  }, []);
-
+  const { data: products, loading, error } = useFetch(getProducts);
   const featured = products.slice(0, 4);
 
   return (
@@ -22,17 +19,23 @@ function ProductsSection() {
           centered
         />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-          {featured.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {loading && <Loader message="Cargando productos..." />}
+        {error && <ErrorMessage message={error} />}
 
-        <div className="text-center mt-12">
-          <Button to="/productos" variant="secondary">
-            Ver toda la tienda
-          </Button>
-        </div>
+        {!loading && !error && (
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+              {featured.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+            <div className="text-center mt-12">
+              <Button to="/productos" variant="secondary">
+                Ver toda la tienda
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

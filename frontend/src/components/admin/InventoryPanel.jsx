@@ -1,36 +1,42 @@
 import { useEffect, useState } from "react";
 import { getInventory } from "../../services/adminService.js";
+import Loader from "../ui/Loader.jsx";
+import ErrorMessage from "../ui/ErrorMessage.jsx";
 
 function formatPrice(value) {
   return value.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 }
 
-// Estado calculado: si la cantidad está en o bajo el mínimo, es "Bajo".
 function getStockStatus(item) {
   return item.quantity <= item.minStock ? "Bajo" : "Normal";
 }
 
 function InventoryPanel() {
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    getInventory().then(setItems);
+    getInventory()
+      .then(setItems)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
 
   function handleDelete(id) {
-    // Elimina solo del estado local (frontend). El backend futuro hará el DELETE real.
     setItems((prev) => prev.filter((item) => item.id !== id));
   }
 
   function handleEdit(id) {
-    // TODO (backend futuro): abrir formulario de edición y enviar PUT a la API.
     console.log("Editar item", id);
   }
 
   function handleAdd() {
-    // TODO (backend futuro): abrir formulario de creación y enviar POST a la API.
     console.log("Agregar nuevo item");
   }
+
+  if (loading) return <Loader message="Cargando inventario..." />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <section className="flex flex-col gap-6">

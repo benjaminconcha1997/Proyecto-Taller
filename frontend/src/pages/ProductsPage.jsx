@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
 import PageLayout from "../components/layout/PageLayout.jsx";
 import PageHero from "../components/ui/PageHero.jsx";
 import ProductCard from "../components/home/ProductCard.jsx";
+import Loader from "../components/ui/Loader.jsx";
+import ErrorMessage from "../components/ui/ErrorMessage.jsx";
 import { getProducts } from "../services/productService.js";
+import { useFetch } from "../hooks/useFetch.js";
 
 function ProductsPage() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    getProducts().then(setProducts);
-  }, []);
+  const { data: products, loading, error } = useFetch(getProducts);
 
   return (
     <PageLayout>
@@ -20,11 +18,15 @@ function ProductsPage() {
 
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading && <Loader message="Cargando productos..." />}
+          {error && <ErrorMessage message={error} />}
+          {!loading && !error && (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </PageLayout>
