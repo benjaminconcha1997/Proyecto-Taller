@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.jsx";
+import LoginModal from "../auth/LoginModal.jsx";
 
 const navLinks = [
   { to: "/", label: "Inicio" },
@@ -10,11 +12,20 @@ const navLinks = [
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const { isAdmin, logout } = useAuth();
+  const navigate = useNavigate();
 
   const linkClass = ({ isActive }) =>
     isActive
       ? "text-terracotta font-medium"
       : "text-ink hover:text-terracotta transition-colors";
+
+  function handleLogout() {
+    logout();
+    setMenuOpen(false);
+    navigate("/");
+  }
 
   return (
     <header className="bg-white border-b border-border/40 sticky top-0 z-50">
@@ -29,12 +40,31 @@ function Header() {
               {link.label}
             </NavLink>
           ))}
-          <Link
-            to="/admin"
-            className="px-4 py-2 rounded-xl bg-terracotta text-white hover:bg-terracotta-dark transition-colors"
-          >
-            Admin
-          </Link>
+
+          {isAdmin ? (
+            <>
+              {/* Panel Admin ahora es un link simple, como los demás */}
+              <NavLink to="/admin" className={linkClass}>
+                Panel Admin
+              </NavLink>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="text-ink hover:text-terracotta transition-colors"
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            // Iniciar sesión ahora es el botón con fondo terracota
+            <button
+              type="button"
+              onClick={() => setShowLogin(true)}
+              className="px-4 py-2 rounded-xl bg-terracotta text-white hover:bg-terracotta-dark transition-colors"
+            >
+              Iniciar sesión
+            </button>
+          )}
         </nav>
 
         <button
@@ -60,15 +90,40 @@ function Header() {
               {link.label}
             </NavLink>
           ))}
-          <Link
-            to="/admin"
-            onClick={() => setMenuOpen(false)}
-            className="px-4 py-2 rounded-xl bg-terracotta text-white text-center hover:bg-terracotta-dark transition-colors"
-          >
-            Admin
-          </Link>
+
+          {isAdmin ? (
+            <>
+              <NavLink
+                to="/admin"
+                className={linkClass}
+                onClick={() => setMenuOpen(false)}
+              >
+                Panel Admin
+              </NavLink>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="text-ink hover:text-terracotta transition-colors text-left"
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setShowLogin(true);
+                setMenuOpen(false);
+              }}
+              className="px-4 py-2 rounded-xl bg-terracotta text-white text-center hover:bg-terracotta-dark transition-colors"
+            >
+              Iniciar sesión
+            </button>
+          )}
         </nav>
       )}
+
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </header>
   );
 }
