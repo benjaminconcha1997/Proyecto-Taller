@@ -11,8 +11,8 @@ function AdminPage() {
   const [activeTab, setActiveTab] = useState("inventory");
 
   // Si no hay sesión, redirige al login.
-  if (!isAdmin) {
-    return <Navigate to="/login" replace />;
+ if (!isAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   return (

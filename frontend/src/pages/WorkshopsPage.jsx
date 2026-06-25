@@ -1,11 +1,19 @@
+import { useEffect, useState } from "react";
 import { Users, Package, Award } from "lucide-react";
 import PageLayout from "../components/layout/PageLayout.jsx";
 import PageHero from "../components/ui/PageHero.jsx";
 import WorkshopCard from "../components/home/WorkshopCard.jsx";
+import CreateWorkshopCard from "../components/workshops/CreateWorkshopCard.jsx";
+import WorkshopForm from "../components/workshops/WorkshopForm.jsx";
 import Loader from "../components/ui/Loader.jsx";
 import ErrorMessage from "../components/ui/ErrorMessage.jsx";
-import { getWorkshops } from "../services/workshopService.js";
-import { useFetch } from "../hooks/useFetch.js";
+import {
+  getWorkshops,
+  createWorkshop,
+  updateWorkshop,
+  deleteWorkshop,
+} from "../services/workshopService.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import heroImage from "../assets/images/hero.jpg";
 
 const benefits = [
@@ -15,7 +23,56 @@ const benefits = [
 ];
 
 function WorkshopsPage() {
-  const { data: workshops, loading, error } = useFetch(getWorkshops);
+  const { isAdmin } = useAuth();
+  const [workshops, setWorkshops] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [showForm, setShowForm] = useState(false);
+  const [editingWorkshop, setEditingWorkshop] = useState(null);
+
+  function loadWorkshops() {
+    setLoading(true);
+    getWorkshops()
+      .then(setWorkshops)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    loadWorkshops();
+  }, []);
+
+  function handleCreate() {
+    setEditingWorkshop(null);
+    setShowForm(true);
+  }
+
+  function handleEdit(workshop) {
+    setEditingWorkshop(workshop);
+    setShowForm(true);
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm("¿Eliminar este taller?")) return;
+    try {
+      await deleteWorkshop(id);
+      loadWorkshops();
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleSave(formData) {
+    if (editingWorkshop) {
+      await updateWorkshop(editingWorkshop.id, formData);
+    } else {
+      await createWorkshop(formData);
+    }
+    setShowForm(false);
+    setEditingWorkshop(null);
+    loadWorkshops();
+  }
 
   return (
     <PageLayout>
@@ -29,10 +86,19 @@ function WorkshopsPage() {
         <div className="max-w-6xl mx-auto px-4">
           {loading && <Loader message="Cargando talleres..." />}
           {error && <ErrorMessage message={error} />}
+
           {!loading && !error && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Card de crear, primera y solo para admin */}
+              {isAdmin && <CreateWorkshopCard onClick={handleCreate} />}
+
               {workshops.map((workshop) => (
-                <WorkshopCard key={workshop.id} workshop={workshop} />
+                <WorkshopCard
+                  key={workshop.id}
+                  workshop={workshop}
+                  onEdit={isAdmin ? () => handleEdit(workshop) : undefined}
+                  onDelete={isAdmin ? () => handleDelete(workshop.id) : undefined}
+                />
               ))}
             </div>
           )}
@@ -55,6 +121,17 @@ function WorkshopsPage() {
           })}
         </div>
       </section>
+
+      {showForm && (
+        <WorkshopForm
+          workshop={editingWorkshop}
+          onSave={handleSave}
+          onCancel={() => {
+            setShowForm(false);
+            setEditingWorkshop(null);
+          }}
+        />
+      )}
     </PageLayout>
   );
 }

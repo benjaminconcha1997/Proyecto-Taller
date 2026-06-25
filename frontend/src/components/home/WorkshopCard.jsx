@@ -3,14 +3,15 @@ import Card from "../ui/Card.jsx";
 import Badge from "../ui/Badge.jsx";
 import Button from "../ui/Button.jsx";
 
-// Formatea el precio en pesos chilenos.
 function formatPrice(value) {
   return value.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 }
 
-function WorkshopCard({ workshop }) {
+// onEdit y onDelete son opcionales: solo se pasan en modo admin.
+function WorkshopCard({ workshop, onEdit, onDelete }) {
   const { title, description, teacher, day, schedule, availableSlots, price, status } = workshop;
   const soldOut = status === "agotado";
+  const isAdmin = Boolean(onEdit || onDelete);
 
   return (
     <Card className="p-6 flex flex-col gap-5">
@@ -32,9 +33,7 @@ function WorkshopCard({ workshop }) {
         </li>
         <li className="flex items-center gap-3">
           <Users className="w-5 h-5 text-terracotta" />
-          <span>
-            {availableSlots > 0 ? `${availableSlots} cupos disponibles` : "Sin cupos"}
-          </span>
+          <span>{availableSlots > 0 ? `${availableSlots} cupos disponibles` : "Sin cupos"}</span>
         </li>
       </ul>
 
@@ -48,6 +47,18 @@ function WorkshopCard({ workshop }) {
           {soldOut ? "Agotado" : "Inscribirse"}
         </Button>
       </div>
+
+      {/* Controles de administración (solo en modo admin) */}
+      {isAdmin && (
+        <div className="flex gap-3 border-t border-border/15 pt-3">
+          <button type="button" onClick={onEdit} className="text-clay hover:underline text-sm">
+            Editar
+          </button>
+          <button type="button" onClick={onDelete} className="text-stone hover:text-red-700 hover:underline text-sm">
+            Eliminar
+          </button>
+        </div>
+      )}
     </Card>
   );
 }
