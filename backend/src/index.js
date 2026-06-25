@@ -1,6 +1,8 @@
+import "dotenv/config"; // carga las variables de .env (debe ir primero)
 import express from "express";
 import cors from "cors";
 
+import authRouter from "./routes/auth.js";
 import workshopsRouter from "./routes/workshops.js";
 import productsRouter from "./routes/products.js";
 import inventoryRouter from "./routes/inventory.js";
@@ -10,16 +12,14 @@ import expensesRouter from "./routes/expenses.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
-app.use(cors()); // permite que el frontend (otro puerto) consuma la API
-app.use(express.json()); // parsea body JSON en POST/PUT
+app.use(cors());
+app.use(express.json());
 
-// Ruta de prueba
 app.get("/", (req, res) => {
   res.json({ message: "API Taller de la Puerta Roja funcionando" });
 });
 
-// Rutas de la API
+app.use("/api/auth", authRouter);
 app.use("/api/workshops", workshopsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/inventory", inventoryRouter);

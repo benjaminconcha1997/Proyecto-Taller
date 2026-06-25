@@ -58,3 +58,10 @@ model Expense {
   date     String
   amount   Int
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String // se guarda hasheada con bcrypt, nunca en texto plano
+  name     String
+}

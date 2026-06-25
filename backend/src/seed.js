@@ -1,4 +1,5 @@
 import pkg from "@prisma/client";
+import bcrypt from "bcryptjs";
 const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
@@ -59,6 +60,17 @@ async function main() {
       { concept: "Esmaltes y óxidos", category: "Materia prima", date: "2026-05-15", amount: 64000 },
       { concept: "Arriendo del taller", category: "Arriendo", date: "2026-05-01", amount: 350000 },
     ],
+  });
+
+  // Usuario admin inicial. La contraseña se guarda hasheada.
+  await prisma.user.deleteMany();
+  const hashedPassword = await bcrypt.hash("123698547", 10);
+  await prisma.user.create({
+    data: {
+      email: "admin@puertaroja.cl",
+      password: hashedPassword,
+      name: "Administradora",
+    },
   });
 
   console.log("Datos semilla insertados correctamente.");
