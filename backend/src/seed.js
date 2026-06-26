@@ -46,19 +46,20 @@ async function main() {
 
   await prisma.invoice.createMany({
     data: [
-      { number: "F-001", client: "María Pérez", date: "2026-05-02", amount: 65000, status: "pagada" },
-      { number: "F-002", client: "Tienda Local SpA", date: "2026-05-10", amount: 144000, status: "pendiente" },
-      { number: "F-003", client: "Jorge Soto", date: "2026-05-18", amount: 32000, status: "pagada" },
-      { number: "F-004", client: "Cafetería Aroma", date: "2026-05-25", amount: 96000, status: "pendiente" },
+      { number: "F-2026-001", client: "María González", concept: "Taller Iniciación", date: "2026-06-01", amount: 85000, status: "pagada" },
+      { number: "F-2026-002", client: "Carlos Rojas", concept: "2x Tazas, 1x Bowl", date: "2026-06-02", amount: 60000, status: "pagada" },
+      { number: "F-2026-003", client: "Sofía Vargas", concept: "Taller Torno", date: "2026-06-02", amount: 95000, status: "pendiente" },
     ],
   });
 
   await prisma.expense.createMany({
     data: [
-      { concept: "Compra de arcilla", category: "Materia prima", date: "2026-05-03", amount: 120000 },
-      { concept: "Cuenta de electricidad (horno)", category: "Servicios", date: "2026-05-08", amount: 85000 },
-      { concept: "Esmaltes y óxidos", category: "Materia prima", date: "2026-05-15", amount: 64000 },
-      { concept: "Arriendo del taller", category: "Arriendo", date: "2026-05-01", amount: 350000 },
+      { concept: "Compra Arcilla Roja 50kg", category: "Materiales", provider: "Cerámica Chile Ltda.", date: "2026-06-01", amount: 125000 },
+      { concept: "Electricidad Mayo", category: "Servicios", provider: "Enel", date: "2026-06-01", amount: 45000 },
+      { concept: "Esmaltes variados", category: "Materiales", provider: "ArteCerámica", date: "2026-06-02", amount: 180000 },
+      { concept: "Reparación Horno", category: "Mantenimiento", provider: "Técnico Ceramista", date: "2026-06-02", amount: 95000 },
+      { concept: "Internet y Teléfono", category: "Servicios", provider: "Movistar", date: "2026-06-03", amount: 32000 },
+      { concept: "Set Herramientas Modelado x5", category: "Herramientas", provider: "Cerámica Chile Ltda.", date: "2026-06-03", amount: 60000 },
     ],
   });
 

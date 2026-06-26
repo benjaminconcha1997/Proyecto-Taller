@@ -43,18 +43,20 @@ model InventoryItem {
 }
 
 model Invoice {
-  id     Int    @id @default(autoincrement())
-  number String
-  client String
-  date   String
-  amount Int
-  status String // pagada | pendiente
+  id      Int    @id @default(autoincrement())
+  number  String
+  client  String
+  concept String
+  date    String
+  amount  Int
+  status  String // pagada | pendiente
 }
 
 model Expense {
   id       Int    @id @default(autoincrement())
   concept  String
   category String
+  provider String
   date     String
   amount   Int
 }

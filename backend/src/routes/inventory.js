@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
+import { requireAuth } from "../middleware/requireAuth.js";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -14,8 +15,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST /api/inventory - crear item
-router.post("/", async (req, res) => {
+// POST /api/inventory - crear item (solo admin)
+router.post("/", requireAuth, async (req, res) => {
   try {
     const { name, category, quantity, unit, minStock, unitPrice } = req.body;
     const item = await prisma.inventoryItem.create({
@@ -34,8 +35,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT /api/inventory/:id - editar item
-router.put("/:id", async (req, res) => {
+// PUT /api/inventory/:id - editar item (solo admin)
+router.put("/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const { name, category, quantity, unit, minStock, unitPrice } = req.body;
@@ -56,8 +57,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /api/inventory/:id - eliminar item
-router.delete("/:id", async (req, res) => {
+// DELETE /api/inventory/:id - eliminar item (solo admin)
+router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await prisma.inventoryItem.delete({ where: { id: Number(id) } });
