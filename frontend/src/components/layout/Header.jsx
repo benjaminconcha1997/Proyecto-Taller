@@ -31,7 +31,7 @@ function Header() {
     <header className="bg-white border-b border-border/40 sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link to="/" className="text-xl font-semibold text-ink">
-          Taller de la Puerta Roja
+          Trio Ceramica
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
