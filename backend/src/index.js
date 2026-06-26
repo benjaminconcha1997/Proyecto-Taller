@@ -1,4 +1,4 @@
-import "dotenv/config"; // carga las variables de .env (debe ir primero)
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 
@@ -12,7 +12,13 @@ import expensesRouter from "./routes/expenses.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// En producción, FRONTEND_URL limita quién puede consumir la API.
+// Si no está definida (desarrollo local), se permite cualquier origen.
+const corsOptions = process.env.FRONTEND_URL
+  ? { origin: process.env.FRONTEND_URL }
+  : {};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -26,6 +32,7 @@ app.use("/api/inventory", inventoryRouter);
 app.use("/api/invoices", invoicesRouter);
 app.use("/api/expenses", expensesRouter);
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+// 0.0.0.0 es necesario para que Railway exponga el servicio.
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
