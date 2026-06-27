@@ -12,11 +12,28 @@ import expensesRouter from "./routes/expenses.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// En producción, FRONTEND_URL limita quién puede consumir la API.
-// Si no está definida (desarrollo local), se permite cualquier origen.
-const corsOptions = process.env.FRONTEND_URL
-  ? { origin: process.env.FRONTEND_URL }
-  : {};
+// Lista de orígenes autorizados a consumir la API.
+// Se incluye FRONTEND_URL (si está definida) más los dominios propios.
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://trioceramica.cl",
+  "https://www.trioceramica.cl",
+].filter(Boolean);
+
+// En desarrollo local (sin FRONTEND_URL ni dominios), se permite cualquier origen.
+const corsOptions =
+  allowedOrigins.length > 0
+    ? {
+        origin: (origin, callback) => {
+          // Permite peticiones sin origin (Postman, curl) y los orígenes de la lista.
+          if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error("Origen no permitido por CORS: " + origin));
+          }
+        },
+      }
+    : {};
 
 app.use(cors(corsOptions));
 app.use(express.json());
