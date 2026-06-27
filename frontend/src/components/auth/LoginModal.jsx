@@ -87,7 +87,7 @@ function LoginModal({ onClose }) {
         {/* Pie con datos demo */}
         <div className="bg-cream border-t border-border/15 px-8 py-4 text-center">
           <p className="text-xs text-stone">
-            Demo: admin@puertaroja.cl / 123698547
+            
           </p>
         </div>
       </div>
